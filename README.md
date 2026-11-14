@@ -13,7 +13,8 @@ Es la primera versión del prototipo descrito en la sección 7 del trabajo final
 | `submuestreo2.sh` | Toma submuestras aleatorias (50 a 800 entradas, tres repeticiones) de los diez corpus finales y mide su cobertura, para comparar los motores a igual tamaño de corpus. |
 | `submuestreo.sh` | Versión anterior del submuestreo, sobre una sola campaña por motor. |
 | `tools/replay_main.c` | `main` mínimo que invoca `LLVMFuzzerTestOneInput` sobre cada archivo de un directorio; se enlaza con el harness para la medición común. |
-| `seeds/` | Corpus inicial (tres semillas) y sus sumas de verificación. |
+| `seeds/json/` | Corpus inicial (tres semillas). |
+| `environment.txt` | Versiones del sistema y de las herramientas usadas en el laboratorio. |
 | `results/` | Resultados de cobertura de la corrida final (`total.txt`, `curvas.txt`, `submuestreo2/sub.tsv`). |
 
 ## Requisitos
@@ -29,10 +30,12 @@ echo core | sudo tee /proc/sys/kernel/core_pattern   # evita que Apport intercep
 ## Uso
 
 ```bash
-bash campanas.sh        # 5 campañas por motor, 300 s cada una, intercaladas
+RES=$HOME/fuzzing-lab/results/campanas bash campanas.sh   # 5 campañas por motor, 300 s cada una, intercaladas
 bash cobertura.sh       # medición común de corpus finales e instantáneas
 bash submuestreo2.sh    # comparación a igual tamaño de corpus
 ```
+
+`campanas.sh` guarda por defecto en un directorio con fecha; `cobertura.sh` y los scripts de submuestreo leen de `results/campanas`, por eso conviene fijar `RES` como arriba. `campanas.sh` también admite `DUR` (duración), `SNAP` (intervalo de instantáneas) y `CORE` (núcleo asignado).
 
 Las rutas asumen el laboratorio en `~/fuzzing-lab`, con json-c clonado en `~/fuzzing-lab/src/json-c` y compilado según los comandos del Anexo A del trabajo.
 
